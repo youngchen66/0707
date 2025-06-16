@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>Google 試算表資料展示</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      margin: 20px auto;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Google 試算表資料</h1>
+  <table id="dataTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const sheetUrl = 'https://script.google.com/macros/s/AKfycbzSsUbQHlK43qZ0Hs6ToQtqgt5sm_HFKAiLNe1L3emm-s94Jizub6ddqsWepDuIstw/exec'; // 請填入你的 GAS 網址
+
+    fetch(sheetUrl)
+      .then(response => response.json())
+      .then(data => {
+        const table = document.getElementById("dataTable");
+        const thead = table.querySelector("thead");
+        const tbody = table.querySelector("tbody");
+
+        // 建立表頭
+        const headers = Object.keys(data[0]);
+        const headerRow = document.createElement("tr");
+        headers.forEach(header => {
+          const th = document.createElement("th");
+          th.textContent = header;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+
+        // 建立內容列
+        data.forEach(row => {
+          const tr = document.createElement("tr");
+          headers.forEach(header => {
+            const td = document.createElement("td");
+            td.textContent = row[header];
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+      })
+      .catch(error => console.error('讀取資料失敗:', error));
+  </script>
+</body>
+</html>
